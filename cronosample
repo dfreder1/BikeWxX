@@ -1,0 +1,11 @@
+# m h  dom mon dow   command
+45 3 * * 1-5 python /home/pipywww/projects/www/tweepy/sacbikewx/amxmlwx.py
+50 3 * * 1-5 python /home/pipywww/projects/www/tweepy/sacbikewx/CTbikewxtweet.py
+45 5 * * 1-5 python /home/pipywww/projects/www/tweepy/sacbikewx/amxmlwx.py
+50 5 * * 1-5 python /home/pipywww/projects/www/tweepy/sacbikewx/PSTbikewxtweet.py
+00 14 * * 1-4 python /home/pipywww/projects/www/tweepy/sacbikewx/pmxmlwx.py
+00 14 * * 5 python /home/pipywww/projects/www/tweepy/sacbikewx/pm_Fr_xmlwx.py
+05 14 * * 1-5 python /home/pipywww/projects/www/tweepy/sacbikewx/CTbikewxtweet.py
+00 16 * * 1-4 python /home/pipywww/projects/www/tweepy/sacbikewx/pmxmlwx.py
+00 16 * * 5 python /home/pipywww/projects/www/tweepy/sacbikewx/pm_Fr_xmlwx.py
+05 16 * * 1-5 python /home/pipywww/projects/www/tweepy/sacbikewx/PSTbikewxtweet.py
