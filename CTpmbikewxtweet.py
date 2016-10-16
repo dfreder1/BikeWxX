@@ -1,6 +1,10 @@
 import tweepy
 from sys import platform as _platform
 #
+# Below required until server upgrade to 2.7.10
+import logging
+logging.captureWarnings(True)
+#
 station_id = ['MSP']
 #
 dict={}
