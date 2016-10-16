@@ -92,7 +92,7 @@ for x in range(0,len(station_id)):
     tweetext = basicwx+' Today. \n'+'Ride in: '+amT+'F, wind '+amWndSpd+' from '+amWndDirT+', chance of rain '+amPofP+'%.\n'+'Ride home: '+pmT+'F, wind '+pmWndSpd+' from '+pmWndDirT+', chance of rain '+pmPofP+'%.'
 #
     if _platform == "linux" or _platform == "linux2":
-        f = open('/home/dougdroplet/BikeWxX/BikeWxX/data/'+station_id[x]+'amforecast.txt','w')
+        f = open('/home/dougdroplet/projects/BikeWxX/BikeWxX/data/'+station_id[x]+'amforecast.txt','w')
         f.write(tweetext)
     elif _platform == "darwin":
         f = open('data/'+station_id[x]+'amforecast.txt','w')
