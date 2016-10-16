@@ -7,7 +7,7 @@ dict={}
 #
 for x in range(0,len(station_id)):
     if _platform == "linux" or _platform == "linux2":
-        f = open('/var/www/html/bikewxx/keys/'+station_id[x]+'keys','r')
+        f = open('/home/dougdroplet2/projects/BikeWxX/BikeWxX/keys/'+station_id[x]+'keys','r')
     #    e = open('/var/www/html/bikewxx/data/'+station_id[x]+'amforecast.txt','r')
     elif _platform == "darwin":
         f = open('keys/'+station_id[x]+'keys','r') 

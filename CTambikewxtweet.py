@@ -6,8 +6,8 @@ station_id = ['MSP']
 #
 dict={}
 if _platform == "linux" or _platform == "linux2":
-    e = open('/var/www/html/bikewxx/data/'+station_id[0]+'amforecast.txt','r')
-    f = open('/var/www/html/bikewxx/keys/MSPkeys','r')
+    e = open('/home/dougdroplet2/projects/BikeWxX/BikeWxX/data/'+station_id[0]+'amforecast.txt','r')
+    f = open('/home/dougdroplet2/projects/BikeWxX/BikeWxX/keys/MSPkeys','r')
     dict = eval(f.read())
 elif _platform == "darwin":
     e = open('data/'+station_id[0]+'amforecast.txt','r')
