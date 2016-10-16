@@ -91,7 +91,7 @@ for x in range(0,len(station_id)):
     tweetext = 'Ride home: '+basicwx+', '+pmT+'F, wind '+pmWndSpd+' from '+pmWndDirT+', chance of rain '+pmPofP+'%.'+'\n'+'Saturday market ride: '+amT+'F, wind '+amWndSpd+' from '+amWndDirT
 #
     if _platform == "linux" or _platform == "linux2":
-        f = open('/var/www/html/bikewxx/data/'+station_id[x]+'forecast.txt','w')
+        f = open('/home/dougdroplet2/BikeWxX/BikeWxX/data/'+station_id[x]+'forecast.txt','w')
         f.write(tweetext)
     elif _platform == "darwin":
         f = open('data/'+station_id[x]+'forecast.txt','w')
