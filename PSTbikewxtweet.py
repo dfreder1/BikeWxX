@@ -15,7 +15,7 @@ for x in range(0,len(station_id)):
         f = open('/home/dougdroplet2/projects/BikeWxX/BikeWxX/keys/'+station_id[x]+'keys','r')
     elif _platform == "darwin":
         e = open('data/'+station_id[x]+'forecast.txt','r')
-        f = open('keys/'+station_id[x]+'keys','r') 
+        f = open('../bikewxxkeys/'+station_id[x]+'keys','r') 
     elif _platform == "win32":
         print 'not supported'
     dict = eval(f.read())

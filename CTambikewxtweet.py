@@ -15,7 +15,7 @@ if _platform == "linux" or _platform == "linux2":
     dict = eval(f.read())
 elif _platform == "darwin":
     e = open('data/'+station_id[0]+'amforecast.txt','r')
-    f = open('keys/MSPkeys','r') 
+    f = open('../bikewxxkeys/MSPkeys','r') 
     dict = eval(f.read())
 elif _platform == "win32":
     print 'not supported'
