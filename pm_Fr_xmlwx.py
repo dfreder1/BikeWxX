@@ -88,7 +88,8 @@ for x in range(0,len(station_id)):
     print pmWndDirT
 #
 #  put the tweet together
-    tweetext = 'Ride home: '+basicwx+', '+pmT+'F, wind '+pmWndSpd+' from '+pmWndDirT+', chance of rain '+pmPofP+'%.'+'\n'+'Saturday market ride: '+amT+'F, wind '+amWndSpd+' from '+amWndDirT
+    tweetext = 'Ride home: '+basicwx+', '+pmT+'F, wind '+pmWndSpd+' from '+pmWndDirT+', chance of rain '+pmPofP+'%.'
+#    tweetext = 'Ride home: '+basicwx+', '+pmT+'F, wind '+pmWndSpd+' from '+pmWndDirT+', chance of rain '+pmPofP+'%.'+'\n'+'Saturday market ride: '+amT+'F, wind '+amWndSpd+' from '+amWndDirT
 #
     if _platform == "linux" or _platform == "linux2":
         f = open('/home/dougdroplet2/projects/BikeWxX/BikeWxX/data/'+station_id[x]+'forecast.txt','w')
