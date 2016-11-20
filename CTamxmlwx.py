@@ -89,7 +89,10 @@ for x in range(0,len(station_id)):
     print pmWndDirT
 #
 #  put the tweet together
-    tweetext = basicwx+' Today. \n'+'Ride in: '+amT+'F, wind '+amWndSpd+' from '+amWndDirT+', chance of rain '+amPofP+'%.\n'+'Ride home: '+pmT+'F, wind '+pmWndSpd+' from '+pmWndDirT+', chance of rain '+pmPofP+'%.'
+    if (int(pmPofP)>10) or (int(amPofP)> 10):
+        tweetext = basicwx+' Today. \n'+'Ride in: '+amT+'F, wind '+amWndSpd+' from '+amWndDirT+', chance of rain '+amPofP+'%.\n'+'Ride home: '+pmT+'F, wind '+pmWndSpd+' from '+pmWndDirT+', chance of rain '+pmPofP+'%.'
+    else:
+        tweetext = basicwx+' Today.\n'+'Ride in: '+amT+'F, wind '+amWndSpd+' from '+amWndDirT+'.\n'+'Ride home: '+pmT+'F, wind '+pmWndSpd+' from '+pmWndDirT+'.'
 #
     if _platform == "linux" or _platform == "linux2":
         f = open('/home/dougdroplet2/projects/BikeWxX/BikeWxX/data/'+station_id[x]+'amforecast.txt','w')
