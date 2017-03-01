@@ -1,7 +1,7 @@
 import socket
 from sys import platform as _platform
-import urllib2
-from lxml import etree
+from urllib2 import urlopen
+from lxml import html
 import requests
 #
 #  CTamwxmlwx.py
@@ -17,7 +17,7 @@ for x in range(0,len(station_id)):
     print('Getting station '+station_id[x]+'...')
     print 'Getting first url...'
     url = 'http://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php?whichClient=NDFDgen&lat='+lat[x]+'&lon='+longit[x]+'&requestedTime=&startTime=&endTime=&compType=&propertyName=&product=time-series&begin=&end=&Unit=e&temp=temp&wspd=wspd&wdir=wdir&wx=wx&wwa=wwa&Submit=Submit'
-    tree = etree.parse(url)
+    tree = html.parse(urlopen(url))
 #
 #  Get the date from the file 
     todayDate = tree.xpath("//time-layout/start-valid-time/text()")[0]
@@ -51,7 +51,7 @@ for x in range(0,len(station_id)):
 #
     print 'Getting second url for weather summary and rain chance...'
     url = 'http://graphical.weather.gov/xml/SOAP_server/ndfdSOAPclientByDay.php?whichClient=NDFDgenByDay&lat='+lat[x]+'&lon='+longit[x]+'&listLatLon=&lat1=&lon1=&lat2=&lon2=&resolutionSub=&endPoint1Lat=&endPoint1Lon=&endPoint2Lat=&endPoint2Lon=&zipCodeList=&centerPointLat=&centerPointLon=&distanceLat=&distanceLon=&resolutionSquare=&citiesLevel=&format=12+hourly&numDays=1&Unit=e&Submit=Submit'
-    tree = etree.parse(url)
+    tree = html.parse(urlopen(url))
 #
 #  Basic Weather Description 
     basicwx = tree.xpath("//@weather-summary")[0]
