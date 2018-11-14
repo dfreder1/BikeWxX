@@ -1,5 +1,5 @@
 #
-# Get the data needed from the APIs
+#  Get the data needed from the APIs
 #
 import requests, json, datetime, socket,time
 from sys import platform as _platform
@@ -35,6 +35,7 @@ def get_wx(baseurl,lat,longit):
    "This function calls the basic weather data from NWS"
    url = baseurl + lat+','+longit+'/forecast/hourly' 
    r = requests.get(url)
+   print(r)
    status = r.status_code
    if status != 200:
       time.sleep(300)
@@ -93,6 +94,7 @@ def get_aqi(baseurl,lat,longit,ymd):
    print(url)
    e.close
    r = requests.get(url)
+   print(r)
    status = r.status_code
    if status != 200:
       time.sleep(300)
