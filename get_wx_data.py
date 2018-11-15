@@ -24,7 +24,7 @@ ymd = datetime.datetime.now()
 #
 url_wx = 'https://api.weather.gov/points/'
 url_aqi='http://www.airnowapi.org/aq/forecast/latLong/?format=application/json&'
-url_light = 'http://api.usno.navy.mil/rstt/oneday?date=today&loc='
+url_light = 'http://api.openweathermap.org/data/2.5/weather?'
 #
 # Functions to call individual APIs
 #
@@ -90,7 +90,7 @@ def get_aqi(baseurl,lat,longit,ymd):
    elif _platform == "win32":
        print('create dir and continue')
    #
-   url = baseurl + 'latitude='+lat+'&longitude='+longit+'&date='+ymd.strftime("%Y")+'-'+ymd.strftime("%m")+'-'+ymd.strftime("%d")+'&distance=25&API_KEY='+e.read()
+   url = baseurl + 'latitude='+lat+'&longitude='+longit+'&date='+ymd.strftime("%Y")+'-'+ymd.strftime("%m")+'-'+ymd.strftime("%d")+'&distance=25&API_KEY='+e.read().rstrip()
    print(url)
    e.close
    r = requests.get(url)
@@ -123,16 +123,24 @@ def get_aqi(baseurl,lat,longit,ymd):
    print()
    return
 #
-# Function for twilight data from USNO
+# Function for twilight data from OpenWeather
 #
-def get_light(baseurl,city):
-   "This function calls the twilight data from USNO"
-   # The api needs a + instead of a space between city names with a space like San+Francisco,CA
-   city = city.replace(" ","+")
-   url = baseurl + city
-   print(url)
+def get_light(baseurl,lat,longit):
+   "This function calls the twilight data from OpenWeather"
+   # Requires API Key
+   if _platform == "linux" or _platform == "linux2":
+       g = open('/home/dougdroplet2/projects/BikeWxX/BikeWxX/keys/OWMkey','r')
+   elif _platform == "darwin":
+       g = open('../bikewxxkeys/OWMkey','r') 
+   elif _platform == "win32":
+       print('create dir and continue')
+   #url = baseurl + city
+   url = baseurl + 'lat='+lat+'&lon='+longit+'&APPID='+g.read().rstrip()
+   g.close
    r = requests.get(url)
+   print(r.url)
    status = r.status_code
+   print(status)
    if status != 200:
       time.sleep(300)
       r = requests.get(url)
@@ -146,18 +154,23 @@ def get_light(baseurl,city):
    try:
       print(status)
       json_data = r.json()
-      #print(json_data)
-      print()
-      beginTwi = "Dark before "+(json_data['sundata'][0]['time'])[:10]
-      endTwi = "Dark after "+(json_data['sundata'][4]['time'])[:10]
+      print(json_data)
+      sunRise = json_data['sys']['sunrise']
+      sunRise = time.strftime("%I:%M %p", time.localtime(sunRise))
+      print(sunRise)
+      sunSet = json_data['sys']['sunset']
+      sunSet = time.strftime("%I:%M %p", time.localtime(sunSet))     
+      print(sunSet)
+      sunRise = "Sunrise "+sunRise
+      sunSet = "Sunset "+sunSet
    except:
-      beginTwi = "No twilight data"
-      endTwi = "No twilight data"
-   print(beginTwi)
-   print(endTwi)
+      sunRise= "No sunrise data"
+      sunSet= "No sunset data"
+   print(sunRise)
+   print(sunSet)
    print()
-   f.write(beginTwi+'\n')
-   f.write(endTwi+'\n')
+   f.write(sunRise+'\n')
+   f.write(sunSet+'\n')
    return
 #
 # Open a txt file and write data to it sequentially, line by line, to be assembled into a tweet in another script
@@ -190,12 +203,12 @@ for city, lat, longit in zip(cities, lats, longits):
    get_aqi(url_aqi, lat, longit, ymd)
 print()
 #
-# Twilight from USNO
+# Twilight from OpenWeather
 #
-for city in cities:
+for city, lat, longit in zip(cities, lats, longits):
    print()
-   print(city)
-   get_light(url_light, city)
+   print(city,lat,longit)
+   get_light(url_light, lat, longit)
 print()
 #
 f.close()

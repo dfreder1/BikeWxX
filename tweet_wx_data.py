@@ -30,12 +30,7 @@ dict={}
 #   If it is after noon, send the ridehome, so i=1
 #
 now = datetime.datetime.now()
-if datetime.time(now.hour)<datetime.time(12,0):     
-   i=0
-   ride='Ride in:\n'
-else:
-   i=1
-   ride='Ride home:\n'
+i=0
 #   
 for city in cities:
     if _platform == "linux" or _platform == "linux2":
@@ -49,9 +44,13 @@ for city in cities:
     auth.set_access_token(dict['ACCESS_TOKEN'], dict['ACCESS_TOKEN_SECRET'])
     api = tweepy.API(auth)
     #
-    tweetext = ride+tweettextlist[i+1]+tweettextlist[i+9]+tweettextlist[i+17]  
-    if i%2 == 0:
-        tweetext = tweetext + 'Ride home:' + '\n' + tweettextlist[i+2]
+    if datetime.time(now.hour)<datetime.time(12,0):     
+        ride='Ride in:\n'
+        tweetext = ride+tweettextlist[i+1]+tweettextlist[i+9]+tweettextlist[i+17]  
+        tweetext = tweetext + 'Ride home:' + '\n' + tweettextlist[i+1]
+    else:
+        ride='Ride home:\n'
+        tweetext = ride+tweettextlist[i+1]+tweettextlist[i+10]+tweettextlist[i+18]  
     print(tweetext)
     api.update_status(tweetext) 
     print()
