@@ -47,7 +47,7 @@ for city in cities:
     if datetime.time(now.hour)<datetime.time(12,0):     
         ride='Ride in:\n'
         tweetext = ride+tweettextlist[i+1]+tweettextlist[i+9]+tweettextlist[i+17]  
-        tweetext = tweetext + 'Ride home:' + '\n' + tweettextlist[i+1]
+        tweetext = tweetext + 'Ride home:' + '\n' + tweettextlist[i+2]
     else:
         ride='Ride home:\n'
         tweetext = ride+tweettextlist[i+1]+tweettextlist[i+10]+tweettextlist[i+18]  
