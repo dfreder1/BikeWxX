@@ -23,7 +23,7 @@ ymd = datetime.datetime.now()
 # Define the 'base' of the three api requests used, will later add on to these strings
 #
 url_wx = 'https://api.weather.gov/points/'
-url_aqi='http://www.airnowapi.org/aq/forecast/latLong/?format=application/json&'
+url_aqi = 'http://www.airnowapi.org/aq/forecast/latLong/?format=application/json&'
 url_light = 'http://api.openweathermap.org/data/2.5/weather?'
 #
 # Functions to call individual APIs
@@ -35,39 +35,39 @@ def get_wx(baseurl,lat,longit):
    "This function calls the basic weather data from NWS"
    url = baseurl + lat+','+longit+'/forecast/hourly' 
    r = requests.get(url)
-   print(r)
    status = r.status_code
+   print(status)
    if status != 200:
       time.sleep(300)
       r = requests.get(url)
       status = r.status_code
+      print(status,1)
    if status != 200:
       time.sleep(300)
       r = requests.get(url)
       status = r.status_code
+      print(status,2)
    if status != 200:
+      print(status,3)
       print('No data after 3 tries') 
    try:
-      print(status)
       json_data = r.json()
       #print(json_data)
       #json_data = requests.get(url).json()
       print(url)
-      print()
       print(json_data['properties']['periods'][2]['startTime'])
-      print()
-      ridein = print('Weather: ')  \
+      ridein = 'Weather: '  \
        +json_data['properties']['periods'][2]['shortForecast'] + ', '\
        +json.dumps(json_data['properties']['periods'][2]['temperature'])      \
-       +print(u'\N{DEGREE SIGN}') \
+       +(u'\N{DEGREE SIGN}') \
        +json_data['properties']['periods'][2]['temperatureUnit'] \
        +', wind '\
        +json_data['properties']['periods'][2]['windSpeed']        + ' from '\
        +json_data['properties']['periods'][2]['windDirection']
-      ridehome = ridein = print('Weather: ')  \
+      ridehome = 'Weather: '  \
        +json_data['properties']['periods'][10]['shortForecast'] + ', '\
        +json.dumps(json_data['properties']['periods'][10]['temperature'])      \
-       +print(u'\N{DEGREE SIGN}') \
+       +(u'\N{DEGREE SIGN}') \
        +json_data['properties']['periods'][10]['temperatureUnit'] \
        +', wind '\
        +json_data['properties']['periods'][10]['windSpeed']        + ' from '\
@@ -77,11 +77,9 @@ def get_wx(baseurl,lat,longit):
       ridein = 'No weather data'
       ridehome = 'No weather data'
    print(ridein)
-   print()
    print(ridehome)
    f.write(ridein+'\n')
    f.write(ridehome+'\n')
-   # Create lists of data per city and ride time
    return
 #
 # Function for AQI from AirNow
