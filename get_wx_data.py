@@ -1,4 +1,4 @@
-#
+# Python 3
 #  Get the data needed from the APIs
 #
 import requests, json, datetime, socket,time
@@ -56,14 +56,20 @@ def get_wx(baseurl,lat,longit):
       print()
       print(json_data['properties']['periods'][2]['startTime'])
       print()
-      ridein = json_data['properties']['periods'][2]['shortForecast'] + ', '\
+      ridein = print('Weather: ')  \
+       +json_data['properties']['periods'][2]['shortForecast'] + ', '\
        +json.dumps(json_data['properties']['periods'][2]['temperature'])      \
-       +json_data['properties']['periods'][2]['temperatureUnit']  + ', wind '\
+       +print(u'\N{DEGREE SIGN}') \
+       +json_data['properties']['periods'][2]['temperatureUnit'] \
+       +', wind '\
        +json_data['properties']['periods'][2]['windSpeed']        + ' from '\
        +json_data['properties']['periods'][2]['windDirection']
-      ridehome = json_data['properties']['periods'][10]['shortForecast'] + ', '\
+      ridehome = ridein = print('Weather: ')  \
+       +json_data['properties']['periods'][10]['shortForecast'] + ', '\
        +json.dumps(json_data['properties']['periods'][10]['temperature'])      \
-       +json_data['properties']['periods'][10]['temperatureUnit']  + ', wind '\
+       +print(u'\N{DEGREE SIGN}') \
+       +json_data['properties']['periods'][10]['temperatureUnit'] \
+       +', wind '\
        +json_data['properties']['periods'][10]['windSpeed']        + ' from '\
        +json_data['properties']['periods'][10]['windDirection']
    except:
@@ -111,8 +117,10 @@ def get_aqi(baseurl,lat,longit,ymd):
       json_data = r.json()
       #print(json_data)
       # Always get the 0 data which is the AQI for this day, as there is only 1 forecast per day provided by the API
-      rideinAqi = "Air Quality Index "+json.dumps(json_data[0]['AQI'])+"-"+(json_data[0]['Category']['Name'])
-      ridehomeAqi = "Air Quality Index "+json.dumps(json_data[0]['AQI'])+"-"+(json_data[0]['Category']['Name'])
+      rideinAqi = "AQI: "+(json_data[0]['Category']['Name'])
+      ridehomeAqi = rideinAqi 
+      # with the index number ridehomeAqi = "Air Quality Index "+json.dumps(json_data[0]['AQI'])+"-"+(json_data[0]['Category']['Name'])
+      # with the index number rideinAqi = "Air Quality Index "+json.dumps(json_data[0]['AQI'])+"-"+(json_data[0]['Category']['Name'])
    except:
       rideinAqi = 'No air quality data'
       ridehomeAqi = 'No air quality data'
@@ -124,6 +132,8 @@ def get_aqi(baseurl,lat,longit,ymd):
    return
 #
 # Function for twilight data from OpenWeather
+# Define bike twilight as 24 minutes before/after sunrise/sunset
+# 24 minutes is 1440 seconds
 #
 def get_light(baseurl,lat,longit):
    "This function calls the twilight data from OpenWeather"
@@ -156,19 +166,20 @@ def get_light(baseurl,lat,longit):
       json_data = r.json()
       print(json_data)
       sunRise = json_data['sys']['sunrise']
-      sunRise = time.strftime("%I:%M %p", time.localtime(sunRise))
+      sunRise = time.strftime("%I:%M %p", time.localtime(sunRise-1440))
       print(sunRise)
       sunSet = json_data['sys']['sunset']
-      sunSet = time.strftime("%I:%M %p", time.localtime(sunSet))     
+      sunSet = time.strftime("%I:%M %p", time.localtime(sunSet+1440))     
       print(sunSet)
-      sunRise = "Sunrise "+sunRise
-      sunSet = "Sunset "+sunSet
+      sunRise = "Bikelights: Before "+sunRise
+      sunSet = "Bikelights: After "+sunSet
    except:
       sunRise= "No sunrise data"
       sunSet= "No sunset data"
    print(sunRise)
    print(sunSet)
    print()
+   # Note that sunrise sunset is now really my definition of Bike Twilight
    f.write(sunRise+'\n')
    f.write(sunSet+'\n')
    return

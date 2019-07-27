@@ -45,11 +45,11 @@ for city in cities:
     api = tweepy.API(auth)
     #
     if datetime.time(now.hour)<datetime.time(12,0):     
-        ride='Ride in:\n'
+        ride='Your morning ride in...\n'
         tweetext = ride+tweettextlist[i+1]+tweettextlist[i+9]+tweettextlist[i+17]  
         tweetext = tweetext + 'Ride home:' + '\n' + tweettextlist[i+2]
     else:
-        ride='Ride home:\n'
+        ride='Your evening ride home...\n'
         tweetext = ride+tweettextlist[i+1]+tweettextlist[i+10]+tweettextlist[i+18]  
     print(tweetext)
     api.update_status(tweetext) 
