@@ -34,7 +34,7 @@ i=0
 #   
 for city in cities:
     if _platform == "linux" or _platform == "linux2":
-        e = open('/home/dougdroplet2/projects/BikeWxX/BikeWxX/keys/'+city+'keys','r')
+        e = open('/home/dougdroplet2/projects/BikeWxX/bikewxxkeys/'+city+'keys','r')
     elif _platform == "darwin":
         e = open('../bikewxxkeys/'+city+'keys','r') 
     elif _platform == "win32":
@@ -46,11 +46,11 @@ for city in cities:
     #
     if datetime.time(now.hour)<datetime.time(12,0):     
         ride='Your morning ride in...\n'
-        tweetext = ride+tweettextlist[i+1]+tweettextlist[i+9]+tweettextlist[i+17]  
-        tweetext = tweetext + 'Ride home:' + '\n' + tweettextlist[i+2]
+        tweetext = ride+tweettextlist[i+1]+tweettextlist[i+9]+tweettextlist[i+17]+tweettextlist[i+25]
+        tweetext = tweetext + 'Ride home will be' + tweettextlist[i+2][8:]
     else:
         ride='Your evening ride home...\n'
-        tweetext = ride+tweettextlist[i+1]+tweettextlist[i+10]+tweettextlist[i+18]  
+        tweetext = ride+tweettextlist[i+1]+tweettextlist[i+10]+tweettextlist[i+18]+tweettextlist[i+26]
     print(tweetext)
     api.update_status(tweetext) 
     print()

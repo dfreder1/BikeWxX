@@ -20,11 +20,12 @@ longits = ['-121.49','-122.38','-122.67','-122.08']
 #
 ymd = datetime.datetime.now()
 #
-# Define the 'base' of the three api requests used, will later add on to these strings
+# Define the 'base' of the four api requests used, will later add on to these strings
 #
 url_wx = 'https://api.weather.gov/points/'
 url_aqi = 'http://www.airnowapi.org/aq/forecast/latLong/?format=application/json&'
 url_light = 'http://api.openweathermap.org/data/2.5/weather?'
+url_tide = 'https://tidesandcurrents.noaa.gov/api/datagetter?date=today&station=9414290&product=predictions&datum=NAVD&time_zone=gmt&interval=hilo&units=english&application=bikewxx&format=json'
 #
 # Functions to call individual APIs
 #
@@ -130,7 +131,7 @@ def get_aqi(baseurl,lat,longit,ymd):
    return
 #
 # Function for twilight data from OpenWeather
-# Define bike twilight as 24 minutes before/after sunrise/sunset
+# Define bike twilight as sunset and 24 minutes before sunrise
 # 24 minutes is 1440 seconds
 #
 def get_light(baseurl,lat,longit):
@@ -167,7 +168,7 @@ def get_light(baseurl,lat,longit):
       sunRise = time.strftime("%I:%M %p", time.localtime(sunRise-1440))
       print(sunRise)
       sunSet = json_data['sys']['sunset']
-      sunSet = time.strftime("%I:%M %p", time.localtime(sunSet+1440))     
+      sunSet = time.strftime("%I:%M %p", time.localtime(sunSet))     
       print(sunSet)
       sunRise = "Bikelights: Before "+sunRise
       sunSet = "Bikelights: After "+sunSet
@@ -182,6 +183,59 @@ def get_light(baseurl,lat,longit):
    f.write(sunSet+'\n')
    return
 #
+# Function for tide data from NOAA
+#
+def get_tide(baseurl, city):
+  "This function calls the tide data from NOAA using the CO-OPS API"
+  # Warning, kluge ahead!
+  # This script assembles lines of text to be tweeted. Each line (now 4 lines) comes from each API call.
+  # The tide api call and it's corresponding line of text only apply to San Francisco
+  # So the kluge is to only run this tide api call on 'Frisco. The fourth line will always be a blank for other cities,
+  # but will be either the tide warning or a blank for 'Frisco.
+  if city == 'San Francisco,CA':
+    url = baseurl
+    r = requests.get(url)
+    status = r.status_code
+    print(status)
+    if status != 200:
+      time.sleep(300)
+      r = requests.get(url)
+      status = r.status_code
+      print(status,1)
+    if status != 200:
+      time.sleep(300)
+      r = requests.get(url)
+      status = r.status_code
+      print(status,2)
+    if status != 200:
+      print(status,3)
+      print('No data after 3 tries') 
+    try:
+      json_data = r.json()
+      print (json_data['predictions'])
+      tidev =  max(float(json_data['predictions'][0]['v']),float(json_data['predictions'][1]['v']),float(json_data['predictions'][2]['v']),float(json_data['predictions'][3]['v']))
+      if tidev > 6.40:
+          tidein = "Warning - Today's high tide of " + str(tidev)[:4] + ' could cause bikepath flooding in low-lying areas, see https://tidesandcurrents.noaa.gov/map/index.shtml?id=9414290 for more info'
+          tidehome = tidein
+      else:
+          tidein = ''
+          tidehome = tidein
+    except:
+      print(status)
+      tidein = 'Tide check broken'
+      tidehome = tidein
+  #  f.write(tidein+'\n')
+  #  f.write(tidehome+'\n')
+  else:
+    tidein = ''
+    tidehome = tidein
+  #
+  f.write(tidein+'\n')
+  f.write(tidehome+'\n')
+  return
+#
+# End of functions
+#
 # Open a txt file and write data to it sequentially, line by line, to be assembled into a tweet in another script
 #
 if _platform == "linux" or _platform == "linux2":
@@ -193,8 +247,7 @@ elif _platform == "darwin":
 elif _platform == "win32":
    print('if on win32, create a dir and continue')
 #
-# Call the APIs
-#
+# Call the functions which access the four APIs
 #
 # Basic weather from NWS
 #
@@ -218,6 +271,13 @@ for city, lat, longit in zip(cities, lats, longits):
    print()
    print(city,lat,longit)
    get_light(url_light, lat, longit)
+print()
+#
+# Tide from NOAA - this is just for 'frisco
+#
+for city in cities:
+  print()
+  get_tide(url_tide,city)
 print()
 #
 f.close()
