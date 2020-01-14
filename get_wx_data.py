@@ -89,7 +89,7 @@ def get_aqi(baseurl,lat,longit,ymd):
    "This function calls the AQI from AirNow"
    # Requires API Key
    if _platform == "linux" or _platform == "linux2":
-       e = open('/home/dougdroplet2/projects/BikeWxX/BikeWxX/keys/AQIkey','r')
+       e = open('/home/dougdroplet2/projects/BikeWxX/bikewxxkeys/AQIkey','r')
    elif _platform == "darwin":
        e = open('../bikewxxkeys/AQIkey','r') 
    elif _platform == "win32":
@@ -138,7 +138,7 @@ def get_light(baseurl,lat,longit):
    "This function calls the twilight data from OpenWeather"
    # Requires API Key
    if _platform == "linux" or _platform == "linux2":
-       g = open('/home/dougdroplet2/projects/BikeWxX/BikeWxX/keys/OWMkey','r')
+       g = open('/home/dougdroplet2/projects/BikeWxX/bikewxxkeys/OWMkey','r')
    elif _platform == "darwin":
        g = open('../bikewxxkeys/OWMkey','r') 
    elif _platform == "win32":
