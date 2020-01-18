@@ -19,13 +19,14 @@ longits = ['-121.49','-122.38','-122.67','-122.08']
 # Define additional data needed for APIs to work
 #
 ymd = datetime.datetime.now()
+dat = ymd.strftime("%Y")+ymd.strftime("%m")+ymd.strftime("%d")
 #
 # Define the 'base' of the four api requests used, will later add on to these strings
 #
 url_wx = 'https://api.weather.gov/points/'
 url_aqi = 'http://www.airnowapi.org/aq/forecast/latLong/?format=application/json&'
 url_light = 'http://api.openweathermap.org/data/2.5/weather?'
-url_tide = 'https://tidesandcurrents.noaa.gov/api/datagetter?date=today&station=9414290&product=predictions&datum=NAVD&time_zone=gmt&interval=hilo&units=english&application=bikewxx&format=json'
+url_tide = 'https://tidesandcurrents.noaa.gov/api/datagetter?begin_date='+dat+'&range=26&station=9414290&product=predictions&datum=NAVD&time_zone=lst&interval=hilo&units=english&application=bikewxx&format=json'
 #
 # Functions to call individual APIs
 #
@@ -51,32 +52,30 @@ def get_wx(baseurl,lat,longit):
    if status != 200:
       print(status,3)
       print('No data after 3 tries') 
-   try:
+   if status == 200:
       json_data = r.json()
       #print(json_data)
       #json_data = requests.get(url).json()
       print(url)
       print(json_data['properties']['periods'][2]['startTime'])
-      ridein = 'Weather: '  \
-       +json_data['properties']['periods'][2]['shortForecast'] + ', '\
+      ridein = json_data['properties']['periods'][2]['shortForecast'] + ', '\
        +json.dumps(json_data['properties']['periods'][2]['temperature'])      \
        +(u'\N{DEGREE SIGN}') \
        +json_data['properties']['periods'][2]['temperatureUnit'] \
        +', wind '\
        +json_data['properties']['periods'][2]['windSpeed']        + ' from '\
        +json_data['properties']['periods'][2]['windDirection']
-      ridehome = 'Weather: '  \
-       +json_data['properties']['periods'][10]['shortForecast'] + ', '\
+      ridehome = json_data['properties']['periods'][10]['shortForecast'] + ', '\
        +json.dumps(json_data['properties']['periods'][10]['temperature'])      \
        +(u'\N{DEGREE SIGN}') \
        +json_data['properties']['periods'][10]['temperatureUnit'] \
        +', wind '\
        +json_data['properties']['periods'][10]['windSpeed']        + ' from '\
        +json_data['properties']['periods'][10]['windDirection']
-   except:
+   else:
       print(status)
-      ridein = 'No weather data'
-      ridehome = 'No weather data'
+      ridein = 'No data'
+      ridehome = 'No data'
    print(ridein)
    print(ridehome)
    f.write(ridein+'\n')
@@ -87,7 +86,7 @@ def get_wx(baseurl,lat,longit):
 #
 def get_aqi(baseurl,lat,longit,ymd):
    "This function calls the AQI from AirNow"
-   # Requires API Key
+   # Requires API Key so find it
    if _platform == "linux" or _platform == "linux2":
        e = open('/home/dougdroplet2/projects/BikeWxX/bikewxxkeys/AQIkey','r')
    elif _platform == "darwin":
@@ -105,13 +104,16 @@ def get_aqi(baseurl,lat,longit,ymd):
       time.sleep(300)
       r = requests.get(url)
       status = r.status_code
+      print(status,1)
    if status != 200:
       time.sleep(300)
       r = requests.get(url)
       status = r.status_code
+      print(status,2)
    if status != 200:
       print('No data after 3 tries') 
-   try:
+      print(status,3)
+   if status == 200:
       print(status)
       json_data = r.json()
       #print(json_data)
@@ -120,9 +122,9 @@ def get_aqi(baseurl,lat,longit,ymd):
       ridehomeAqi = rideinAqi 
       # with the index number ridehomeAqi = "Air Quality Index "+json.dumps(json_data[0]['AQI'])+"-"+(json_data[0]['Category']['Name'])
       # with the index number rideinAqi = "Air Quality Index "+json.dumps(json_data[0]['AQI'])+"-"+(json_data[0]['Category']['Name'])
-   except:
-      rideinAqi = 'No air quality data'
-      ridehomeAqi = 'No air quality data'
+   else:
+      rideinAqi = 'No data'
+      ridehomeAqi = 'No data'
    print(rideinAqi)
    print(ridehomeAqi)
    f.write(rideinAqi+'\n') 
@@ -136,7 +138,7 @@ def get_aqi(baseurl,lat,longit,ymd):
 #
 def get_light(baseurl,lat,longit):
    "This function calls the twilight data from OpenWeather"
-   # Requires API Key
+   # Requires API Key so find it
    if _platform == "linux" or _platform == "linux2":
        g = open('/home/dougdroplet2/projects/BikeWxX/bikewxxkeys/OWMkey','r')
    elif _platform == "darwin":
@@ -154,13 +156,16 @@ def get_light(baseurl,lat,longit):
       time.sleep(300)
       r = requests.get(url)
       status = r.status_code
+      print(status,1)
    if status != 200:
       time.sleep(300)
       r = requests.get(url)
       status = r.status_code
+      print(status,2)
    if status != 200:
       print('No data after 3 tries') 
-   try:
+      print(status,3)
+   if status == 200:
       print(status)
       json_data = r.json()
       print(json_data)
@@ -172,9 +177,9 @@ def get_light(baseurl,lat,longit):
       print(sunSet)
       sunRise = "Bikelights: Before "+sunRise
       sunSet = "Bikelights: After "+sunSet
-   except:
-      sunRise= "No sunrise data"
-      sunSet= "No sunset data"
+   else:
+      sunRise= "No data"
+      sunSet= "No data"
    print(sunRise)
    print(sunSet)
    print()
@@ -210,7 +215,7 @@ def get_tide(baseurl, city):
     if status != 200:
       print(status,3)
       print('No data after 3 tries') 
-    try:
+    if status == 200:
       json_data = r.json()
       print (json_data['predictions'])
       tidev =  max(float(json_data['predictions'][0]['v']),float(json_data['predictions'][1]['v']),float(json_data['predictions'][2]['v']),float(json_data['predictions'][3]['v']))
@@ -218,16 +223,17 @@ def get_tide(baseurl, city):
           tidein = "Warning - Today's high tide of " + str(tidev)[:4] + ' could cause bikepath flooding in low-lying areas, see https://tidesandcurrents.noaa.gov/map/index.shtml?id=9414290 for more info'
           tidehome = tidein
       else:
-          tidein = ''
+          # Assigning 'no data' here but really if it gets here then there is data, it is just data I don't want tweeted
+          tidein = 'No data'
           tidehome = tidein
-    except:
+    else:
       print(status)
-      tidein = 'Tide check broken'
+      tidein = 'No data'
       tidehome = tidein
   #  f.write(tidein+'\n')
   #  f.write(tidehome+'\n')
   else:
-    tidein = ''
+    tidein = 'No data'
     tidehome = tidein
   #
   f.write(tidein+'\n')

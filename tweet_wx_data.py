@@ -26,11 +26,11 @@ print()
 #
 dict={}
 #
-#   If it is before noon, send the ridein, so i=0
-#   If it is after noon, send the ridehome, so i=1
-#
+#   If it is before noon, send the ridein
+#   If it is after noon, send the ridehome
+#   Below assumes the server is on local time
 now = datetime.datetime.now()
-i=0
+i = 0
 #   
 for city in cities:
     if _platform == "linux" or _platform == "linux2":
@@ -45,15 +45,53 @@ for city in cities:
     api = tweepy.API(auth)
     #
     if datetime.time(now.hour)<datetime.time(12,0):     
-        ride='Your morning ride in...\n'
-        tweetext = ride+tweettextlist[i+1]+tweettextlist[i+9]+tweettextlist[i+17]+tweettextlist[i+25]
-        tweetext = tweetext + 'Ride home will be' + tweettextlist[i+2][8:]
+        ride='Morning ride in will be '
+        #tweetext = ride+tweettextlist[i+1]+tweettextlist[i+9]+tweettextlist[i+17]+tweettextlist[i+25]
+        tweetext = ride
+        if tweettextlist[i+1][:7] == 'No data':
+            tweetext = tweetext
+        else:
+            tweetext = tweetext + str.lower(tweettextlist[i+1][:1]) + tweettextlist[i+1][1:]
+        if tweettextlist[i+9][:7] == 'No data':
+            tweetext = tweetext
+        else:
+            tweetext = tweetext + tweettextlist[i+9]
+        if tweettextlist[i+17][:7] == 'No data':
+            tweetext = tweetext
+        else:
+            tweetext = tweetext + tweettextlist[i+17]
+        if tweettextlist[i+25][:7] == 'No data':
+            tweetext = tweetext
+        else:
+            tweetext = tweetext + tweettextlist[i+25]
+        if tweettextlist[i+2][:7] == 'No data':
+            tweetext = tweetext
+        else:    
+            tweetext = tweetext + 'Ride home will be' + tweettextlist[i+2][8:]
     else:
-        ride='Your evening ride home...\n'
-        tweetext = ride+tweettextlist[i+1]+tweettextlist[i+10]+tweettextlist[i+18]+tweettextlist[i+26]
+        ride='Evening ride home will be '
+        #tweetext = ride+tweettextlist[i+1]+tweettextlist[i+10]+tweettextlist[i+18]+tweettextlist[i+26]
+        tweetext = ride
+        if tweettextlist[i+1][:7] == 'No data':
+            tweetext = tweetext
+        else:
+            tweetext = tweetext + str.lower(tweettextlist[i+1][:1]) + tweettextlist[i+1][1:]
+        if tweettextlist[i+10][:7] == 'No data':
+            tweetext = tweetext
+        else:
+            tweetext = tweetext + tweettextlist[i+10]
+        if tweettextlist[i+18][:7] == 'No data':
+            tweetext = tweetext
+        else:
+            tweetext = tweetext + tweettextlist[i+18]
+        if tweettextlist[i+26][:7] == 'No data':
+            tweetext = tweetext
+        else:
+            tweetext = tweetext + tweettextlist[i+26]
+    print("")
+    print(city)
     print(tweetext)
-    api.update_status(tweetext) 
-    print()
+    #api.update_status(tweetext) 
     print('tweets away!')
     i += 2
     e.close
