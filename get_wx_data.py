@@ -26,7 +26,7 @@ dat = ymd.strftime("%Y")+ymd.strftime("%m")+ymd.strftime("%d")
 url_wx = 'https://api.weather.gov/points/'
 url_aqi = 'http://www.airnowapi.org/aq/forecast/latLong/?format=application/json&'
 url_light = 'http://api.openweathermap.org/data/2.5/weather?'
-url_tide = 'https://tidesandcurrents.noaa.gov/api/datagetter?begin_date='+dat+'&range=26&station=9414290&product=predictions&datum=NAVD&time_zone=lst&interval=hilo&units=english&application=bikewxx&format=json'
+url_tide = 'https://tidesandcurrents.noaa.gov/api/datagetter?begin_date='+dat+'&range=48&station=9414290&product=predictions&datum=NAVD&time_zone=lst&interval=hilo&units=english&application=bikewxx&format=json'
 #
 # Functions to call individual APIs
 #
@@ -201,6 +201,7 @@ def get_tide(baseurl, city):
     url = baseurl
     r = requests.get(url)
     status = r.status_code
+    print(url)
     print(status)
     if status != 200:
       time.sleep(300)
