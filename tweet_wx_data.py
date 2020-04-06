@@ -45,13 +45,12 @@ for city in cities:
     api = tweepy.API(auth)
     #
     if datetime.time(now.hour)<datetime.time(12,0):     
-        ride='Morning ride in will be '
-        #tweetext = ride+tweettextlist[i+1]+tweettextlist[i+9]+tweettextlist[i+17]+tweettextlist[i+25]
+        ride='Morning ride in:'
         tweetext = ride
         if tweettextlist[i+1][:7] == 'No data':
             tweetext = tweetext
         else:
-            tweetext = tweetext + str.lower(tweettextlist[i+1][:1]) + tweettextlist[i+1][1:]
+            tweetext = tweetext + tweettextlist[i+1] 
         if tweettextlist[i+9][:7] == 'No data':
             tweetext = tweetext
         else:
@@ -67,15 +66,14 @@ for city in cities:
         if tweettextlist[i+2][:7] == 'No data':
             tweetext = tweetext
         else:    
-            tweetext = tweetext + 'Ride home will be' + tweettextlist[i+2][8:]
+            tweetext = tweetext + 'Ride home: ' + tweettextlist[i+2]
     else:
-        ride='Evening ride home will be '
-        #tweetext = ride+tweettextlist[i+1]+tweettextlist[i+10]+tweettextlist[i+18]+tweettextlist[i+26]
+        ride='Evening ride home: '
         tweetext = ride
         if tweettextlist[i+1][:7] == 'No data':
             tweetext = tweetext
         else:
-            tweetext = tweetext + str.lower(tweettextlist[i+1][:1]) + tweettextlist[i+1][1:]
+            tweetext = tweetext + tweettextlist[i+1]
         if tweettextlist[i+10][:7] == 'No data':
             tweetext = tweetext
         else:
@@ -91,7 +89,7 @@ for city in cities:
     print("")
     print(city)
     print(tweetext)
-    #api.update_status(tweetext) 
+    api.update_status(tweetext) 
     print('tweets away!')
     i += 2
     e.close

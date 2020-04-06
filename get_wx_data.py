@@ -54,24 +54,41 @@ def get_wx(baseurl,lat,longit):
       print('No data after 3 tries') 
    if status == 200:
       json_data = r.json()
-      #print(json_data)
-      #json_data = requests.get(url).json()
-      print(url)
-      print(json_data['properties']['periods'][2]['startTime'])
-      ridein = json_data['properties']['periods'][2]['shortForecast'] + ', '\
-       +json.dumps(json_data['properties']['periods'][2]['temperature'])      \
-       +(u'\N{DEGREE SIGN}') \
-       +json_data['properties']['periods'][2]['temperatureUnit'] \
-       +', wind '\
-       +json_data['properties']['periods'][2]['windSpeed']        + ' from '\
-       +json_data['properties']['periods'][2]['windDirection']
-      ridehome = json_data['properties']['periods'][10]['shortForecast'] + ', '\
-       +json.dumps(json_data['properties']['periods'][10]['temperature'])      \
-       +(u'\N{DEGREE SIGN}') \
-       +json_data['properties']['periods'][10]['temperatureUnit'] \
-       +', wind '\
-       +json_data['properties']['periods'][10]['windSpeed']        + ' from '\
-       +json_data['properties']['periods'][10]['windDirection']
+#      print(json_data)
+#      print("")
+#      print(url)
+#      print(json_data['properties']['periods'][1])
+# 
+#  Get the time of "period 1" (which is 0 on the list), then use that info to find which period to grab. For ride in you want 15:00 UTC, and for ride home you want 00:00 UTC.
+#  The chron job runs at 4 am which is 11 utc, and at 3 pm which is 23 utc  
+#
+      startTime = json_data['properties']['periods'][0]['startTime']
+      print(startTime)
+      startTime = int(startTime[11:13])
+      if startTime < 15:
+         needPeriod = 1+15-startTime
+      else:
+         needPeriod = 1+24-startTime
+      print(startTime)
+      print(needPeriod)
+      #
+      ridein = json_data['properties']['periods'][needPeriod]['shortForecast'] + ', '\
+       +json.dumps(json_data['properties']['periods'][needPeriod]['temperature'])      \
+       +json_data['properties']['periods'][needPeriod]['temperatureUnit'] \
+       +', Wind '\
+       +json_data['properties']['periods'][needPeriod]['windSpeed']        + ' from '\
+       +json_data['properties']['periods'][needPeriod]['windDirection']
+       #
+      needPeriod = needPeriod + 8
+#       +(u'\N{DEGREE SIGN}') \
+       #
+      ridehome = json_data['properties']['periods'][needPeriod]['shortForecast'] + ', '\
+       +json.dumps(json_data['properties']['periods'][needPeriod]['temperature'])      \
+       +json_data['properties']['periods'][needPeriod]['temperatureUnit'] \
+       +', Wind '\
+       +json_data['properties']['periods'][needPeriod]['windSpeed']        + ' from '\
+       +json_data['properties']['periods'][needPeriod]['windDirection']
+#       +(u'\N{DEGREE SIGN}') \
    else:
       print(status)
       ridein = 'No data'
@@ -221,7 +238,7 @@ def get_tide(baseurl, city):
       print (json_data['predictions'])
       tidev =  max(float(json_data['predictions'][0]['v']),float(json_data['predictions'][1]['v']),float(json_data['predictions'][2]['v']),float(json_data['predictions'][3]['v']))
       if tidev > 6.40:
-          tidein = "Warning - Today's high tide of " + str(tidev)[:4] + ' could cause bikepath flooding in low-lying areas, see https://tidesandcurrents.noaa.gov/map/index.shtml?id=9414290 for more info'
+          tidein = "Today's high tide of " + str(tidev)[:4] + ' could cause path flooding in low areas, see https://tidesandcurrents.noaa.gov/map/index.shtml?id=9414290'
           tidehome = tidein
       else:
           # Assigning 'no data' here but really if it gets here then there is data, it is just data I don't want tweeted
