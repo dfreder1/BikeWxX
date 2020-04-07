@@ -54,21 +54,22 @@ def get_wx(baseurl,lat,longit):
       print('No data after 3 tries') 
    if status == 200:
       json_data = r.json()
-#      print(json_data)
-#      print("")
-#      print(url)
-#      print(json_data['properties']['periods'][1])
 # 
-#  Get the time of "period 1" (which is 0 on the list), then use that info to find which period to grab. For ride in you want 15:00 UTC, and for ride home you want 00:00 UTC.
-#  The chron job runs at 4 am which is 11 utc, and at 3 pm which is 23 utc  
+#  The times given in the api are local times, and the utc offset is shown for information. 
+#  1994-11-05T08:15:30-05:00 corresponds to November 5, 1994, 8:15:30 am, US Eastern Standard Time.
+#  1994-11-05T13:15:30Z corresponds to the same instant.
+#
+#  Get the time of "period 1" (which is 0 on the list), then use that info to find which period to grab. 
+#  For ride in you want 07:00 local, and for ride home you want 17:00 local.
+#  The chron job runs at 3:45 am and at 3:45 pm 
 #
       startTime = json_data['properties']['periods'][0]['startTime']
       print(startTime)
       startTime = int(startTime[11:13])
-      if startTime < 15:
-         needPeriod = 1+15-startTime
+      if startTime < 12:
+         needPeriod = 8-startTime
       else:
-         needPeriod = 1+24-startTime
+         needPeriod = 15-startTime
       print(startTime)
       print(needPeriod)
       #
@@ -79,7 +80,7 @@ def get_wx(baseurl,lat,longit):
        +json_data['properties']['periods'][needPeriod]['windSpeed']        + ' from '\
        +json_data['properties']['periods'][needPeriod]['windDirection']
        #
-      needPeriod = needPeriod + 8
+      needPeriod = needPeriod + 9
 #       +(u'\N{DEGREE SIGN}') \
        #
       ridehome = json_data['properties']['periods'][needPeriod]['shortForecast'] + ', '\
