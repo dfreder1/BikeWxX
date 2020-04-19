@@ -1,10 +1,10 @@
-##Project
+## Project
 
 Source code for creating a simple twice-daily twitter bot to report the bike commute weather for Sacramento, San Francisco, Silicon Valley, and Portland.
 
 Currently running on twitter bots: @bikewxsac, @BikeWxSF, @BikeWxPDX, and @BikeWxSV
 
-##Operation
+## Operation
 
 'get_wx_data.py' grabs basic weather data from:
 
